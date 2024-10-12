@@ -1,0 +1,17 @@
+[project]
+name = "fotoblog"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "MELJOESTEIN", email = "thierrymemel@gmail.com" }
+]
+dependencies = [
+    "django>=5.1.2",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[tool.rye]
+managed = true
+virtual = true
+dev-dependencies = []
