@@ -1,12 +1,27 @@
-<html>
-    <head>
-        <title>FotoBlog</title>
-    </head>
-    <body>
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FotoBlog</title>
+    <link rel="stylesheet" href="{% static 'app.css' %}">
+</head>
+<body>
+    <div class="sidebar">
         <h1>FotoBlog</h1>
-        {% block content %}{% endblock content %}
+        <a href="{% url 'home' %}">Accueil</a>
+        <a href="{% url 'blog_create' %}">Écrire un billet</a>
+        <a href="{% url 'photo_upload' %}">Télécharger une photo</a>
+        <p><a href="{% url 'create_multiple_photos' %}">Télécharger plusieurs photos</a></p>
         {% if user.is_authenticated %}
-            <p>Vous êtes connecté en tant que {{ request.user }}. <a href="{% url 'logout' %}">Se déconnecter</a></p>
+            <p>Connecté en tant que {{ request.user }}</p>
+            <a href="{% url 'logout' %}">Se déconnecter</a>
         {% endif %}
-    </body>
+    </div>
+
+    <div class="main">
+        {% block content %}{% endblock content %}
+    </div>
+</body>
 </html>

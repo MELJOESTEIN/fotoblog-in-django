@@ -1,4 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
-    <p>Vous êtes connecté !</p>
+    <h2>Photos</h2>
+    <div class="grid-container">
+        {% for photo in photos %}
+            <div class="post">
+                <img src="{{ photo.image.url }}" alt="{{ photo.caption }}">
+                <p>{{ photo.caption }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2>Blog</h2>
+    <div class="grid-container">
+        {% for blog in blogs %}
+            <div class="post">
+                <a href="{% url 'view_blog' blog.id %}">
+                    <h4>{{ blog.title }}</h4>
+                    <img src="{{ blog.photo.image.url }}" alt="{{ blog.title }}">
+                </a>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock content %}
