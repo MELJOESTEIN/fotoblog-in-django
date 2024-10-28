@@ -2,6 +2,8 @@ from django.db import models
 
 from django.conf import settings
 
+from PIL import Image
+
 
 
 class Photo(models.Model):
@@ -11,10 +13,35 @@ class Photo(models.Model):
 	date_created = models.DateTimeField(auto_now_add=True)
 
 
+	IMAGE_MAX_SIZE = (800, 800)
+
+	def resize_image(self):
+		image = Image.open(self.image)
+		image.thumbnail(self.IMAGE_MAX_SIZE)
+		# sauvegarde de l'image redimensionnée dans le syteme de fichiers
+		# ce n'est pas methode save() du modele!
+		image.save(self.image.path)
+
+	def save(self, *args, **kwargs):
+		super().save(*args, **kwargs)
+		self.resize_image()
+
+
+
 class Blog(models.Model):
 	photo = models.ForeignKey(Photo, null=True, on_delete=models.SET_NULL, blank=True)
 	title = models.CharField(max_length=128)
 	content = models.TextField(max_length=5000)
-	author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+	contributors = models.ManyToManyField(settings.AUTH_USER_MODEL, through='BlogContributor', related_name='contributions')
 	date_created = models.DateTimeField(auto_now_add=True)
 	starred = models.BooleanField(default=False)
+
+
+class BlogContributor(models.Model):
+	contributor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
+	contribution = models.CharField(max_length=225, blank=True)
+
+	class Meta:
+		unique_together = ('contributor', 'blog')

@@ -12,7 +12,10 @@
         <h1>FotoBlog</h1>
         <a href="{% url 'home' %}">Accueil</a>
         <a href="{% url 'blog_create' %}">Écrire un billet</a>
-        <a href="{% url 'photo_upload' %}">Télécharger une photo</a>
+        {% if perms.blog.add_photo %}
+           <a href="{% url 'photo_upload' %}">Télécharger une photo</a>
+        {% endif %}
+        <p><a href="{% url 'follow_users' %}">Suivre des utilisateurs</a></p>
         <p><a href="{% url 'create_multiple_photos' %}">Télécharger plusieurs photos</a></p>
         {% if user.is_authenticated %}
             <p>Connecté en tant que {{ request.user }}</p>

@@ -1,9 +1,26 @@
 from django import forms
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth import get_user_model
 from . import models
 
 
+User = get_user_model()
+
+class FollowUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['follows']
+        widgets = {
+            'follows': forms.CheckboxSelectMultiple()  # Makes it easier to select multiple creators
+        }
+        labels = {
+            'follows': 'Créateurs à suivre'  # French label to match your other labels
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Only show CREATOR users as options
+        self.fields['follows'].queryset = User.objects.filter(role=User.CREATOR)
 
 class PhotoForm(forms.ModelForm):
 	class Meta:
